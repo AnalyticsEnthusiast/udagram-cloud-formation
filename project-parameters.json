@@ -1,0 +1,58 @@
+[
+	{
+		"ParameterKey": "EnvironmentName",
+		"ParameterValue": "UdagramWebApplication"
+	},
+  {
+    "ParameterKey": "Region",
+		"ParameterValue": "us-west-2"
+  },
+	{
+		"ParameterKey": "EnvironmentType",
+		"ParameterValue": "TEST"
+	},
+  {
+		"ParameterKey": "InstanceType",
+		"ParameterValue": "t2.medium"
+	},
+  {
+    "ParameterKey": "InstanceDefaultPort",
+		"ParameterValue": "80"
+  },
+  {
+    "ParameterKey": "InstanceDeviceName",
+		"ParameterValue": "/dev/sdc"
+  },
+  {
+    "ParameterKey": "InstanceVolumeSize",
+    "ParameterValue": "10"
+  },
+  {
+    "ParameterKey": "InstanceKeyPair",
+    "ParameterValue": "UdagramTestKey"
+  },
+  {
+    "ParameterKey": "VpcCIDR",
+		"ParameterValue": "10.0.0.0/16"
+  },
+  {
+    "ParameterKey": "PublicSubnet1CIDR",
+		"ParameterValue": "10.0.1.0/24"
+  },
+  {
+    "ParameterKey": "PublicSubnet2CIDR",
+		"ParameterValue": "10.0.2.0/24"
+  },
+  {
+    "ParameterKey": "PrivateSubnet1CIDR",
+		"ParameterValue": "10.0.3.0/24"
+  },
+  {
+    "ParameterKey": "PrivateSubnet2CIDR",
+		"ParameterValue": "10.0.4.0/24"
+  },
+  {
+    "ParameterKey": "CodeBucketName",
+		"ParameterValue": "udagram-code-bucket-df001"
+  }
+]

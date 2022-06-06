@@ -1,0 +1,179 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Name: Darren Foley
+  Email: darrenfoley015:@gmail.com
+  Desc: Template for creating reusable variables in SSM across all templates. This will prevent
+  duplicated parameters across templates and config drift. 
+
+Parameters:
+  EnvironmentName:
+    Description: Unique Identifier for project environment
+    Type: String
+  
+  EnvironmentType:
+    Description: Type of environment
+    Type: String
+  
+  Region:
+    Description: Region used for deployment
+    Type: String
+  
+  InstanceType:
+    Description: Size of EC2 instances being used
+    Type: String
+  
+  InstanceDefaultPort:
+    Description: Default port being used for EC2 instances
+    Type: String
+  
+  InstanceDeviceName:
+    Description: Device path name
+    Type: String
+  
+  InstanceVolumeSize:
+    Description: Instance Volume size
+    Type: String
+
+  InstanceKeyPair:
+    Description: Instance key pair name
+    Type: String
+  
+  VpcCIDR:
+    Description: Address range for VPC CIDR
+    Type: String
+  
+  PublicSubnet1CIDR:
+    Description: Address range for Public CIDR 1
+    Type: String
+
+  PublicSubnet2CIDR:
+    Description: Address range for Public CIDR 2
+    Type: String
+
+  PrivateSubnet1CIDR:
+    Description: Address range for Private CIDR 1
+    Type: String
+
+  PrivateSubnet2CIDR:
+    Description: Address range for Private CIDR 2
+    Type: String
+
+
+Resources:
+
+  EnvironmentTypeParam:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: Type of Application we are deploying
+      Name: /TEST
+      Tier: Standard
+      Type: String
+      Value: !Ref EnvironmentType
+
+  EnvironmentNameParam:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: Name of Application we are deploying
+      Name: /TEST/EnvironmentName
+      Tier: Standard
+      Type: String
+      Value: !Ref EnvironmentName
+  
+  Region:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: Default region for Web Application
+      Name: /TEST/Region
+      Tier: Standard
+      Type: String
+      Value: !Ref Region
+
+  VpcCIDRParam:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: Name of Application we are deploying
+      Name: /TEST/VpcCIDR
+      Tier: Standard
+      Type: String
+      Value: !Ref VpcCIDR
+
+  InstanceTypeParam:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: Size of ec2 instances
+      Name: /TEST/EC2/InstanceType
+      Tier: Standard
+      Type: String
+      Value: !Ref InstanceType
+
+  InstanceDefaultPortParam:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: Default port for Udagram Web Application
+      Name: /TEST/EC2/InstanceDefaultPort
+      Tier: Standard
+      Type: String
+      Value: !Ref InstanceDefaultPort
+  
+  InstanceDeviceNameParam:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: Default port for Udagram Web Application
+      Name: /TEST/EC2/InstanceDeviceName
+      Tier: Standard
+      Type: String
+      Value: !Ref InstanceDeviceName
+  
+  InstanceVolumeSizeParam:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: Size of attached volume for EC2 instances
+      Name: /TEST/EC2/InstanceVolumeSize
+      Tier: Standard
+      Type: String
+      Value: !Ref InstanceVolumeSize
+
+  InstanceKeyPairParam:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: Size of attached volume for EC2 instances
+      Name: /TEST/EC2/InstanceKeyPair
+      Tier: Standard
+      Type: String
+      Value: !Ref InstanceKeyPair
+  
+  PublicSubnet1Param:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: CIDR block for public subnet 1
+      Name: /TEST/EC2/PublicSubnet1CIDR
+      Tier: Standard
+      Type: String
+      Value: !Ref PublicSubnet1CIDR
+  
+  PublicSubnet2Param:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: CIDR block for public subnet 2
+      Name: /TEST/EC2/PublicSubnet2CIDR
+      Tier: Standard
+      Type: String
+      Value: !Ref PublicSubnet2CIDR
+  
+  PrivateSubnet1Param:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: CIDR block for private subnet 1
+      Name: /TEST/EC2/PrivateSubnet1CIDR
+      Tier: Standard
+      Type: String
+      Value: !Ref PrivateSubnet1CIDR
+  
+  PrivateSubnet2Param:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: CIDR block for private subnet 2
+      Name: /TEST/EC2/PrivateSubnet2CIDR
+      Tier: Standard
+      Type: String
+      Value: !Ref PrivateSubnet2CIDR
