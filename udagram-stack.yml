@@ -4,42 +4,113 @@ Description: >
   Email: darrenfoley015@gmail.com
   Desc: Parent Template configuration which calls the project substacks.
 
-# Parameters:
-#   EnvironmentType:
-#     Description: Type of environment
-#     Type: 'AWS::SSM::Parameter::Value<String>'
-#     Default: '/TEST'
+Parameters:
+  
+  EnvironmentType:
+    Description: Type of environment
+    Type: String
 
-#   EnvironmentName:
-#     Description: Unique Identifier for project environment
-#     Type: 'AWS::SSM::Parameter::Value<String>'
-#     Default: '/TEST/EnvironmentName'
+  EnvironmentName:
+    Description: Unique Identifier for project environment
+    Type: String
+  
+  EnvironmentRegion:
+    Description: Region used for deployment
+    Type: String
+
+  InstanceType:
+    Description: Size of EC2 instances being used
+    Type: String
+
+  InstanceDefaultPort:
+    Description: Default port being used for EC2 instances
+    Type: String
+
+  InstanceDeviceName:
+    Description: Device path name
+    Type: String
+
+  InstanceVolumeSize:
+    Description: Instance Volume size
+    Type: String
+
+  InstanceKeyPair:
+    Description: Instance key pair name
+    Type: String
+
+  VpcCIDR:
+    Description: Address range for VPC CIDR
+    Type: String
+
+  PublicSubnet1CIDR:
+    Description: Address range for Public CIDR 1
+    Type: String
+
+  PublicSubnet2CIDR:
+    Description: Address range for Public CIDR 2
+    Type: String
+
+  PrivateSubnet1CIDR:
+    Description: Address range for Private CIDR 1
+    Type: String
+
+  PrivateSubnet2CIDR:
+    Description: Address range for Private CIDR 2
+    Type: String
+
+  CodeBucketName:
+    Description: Name of Code bucket were project code will be pushed
+    Type: String
+
+  AutoScalingMinSize:
+    Description: Minimum Size for EC2 Autoscaling group
+    Type: String
+
+  AutoScalingMaxSize:
+    Description: Maximum size for EC2 Autoscaling group
+    Type: String
 
 Resources:
 
   ParamModule:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: ./substacks/variables.yml
-      Parameters: ./project-parameters.json
-  
-  ServiceModule:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: ./substacks/services.yml
-    DependsOn: ParamModule
+      TemplateURL: !Sub ${CodeBucketName}/substacks/variables.yml
+      Parameters:
+        EnvironmentType: !Ref EnvironmentType
+        EnvironmentName: !Ref EnvironmentName
+        EnvironmentRegion: !Ref EnvironmentRegion
+        InstanceType: !Ref InstanceType
+        InstanceDefaultPort: !Ref InstanceDefaultPort
+        InstanceDeviceName: !Ref InstanceDeviceName
+        InstanceVolumeSize: !Ref InstanceVolumeSize
+        InstanceKeyPair: !Ref InstanceKeyPair
+        VpcCIDR: !Ref VpcCIDR
+        PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
+        PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
+        PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
+        PrivateSubnet2CIDR: !Ref PrivateSubnet2CIDR
+        CodeBucketName: !Ref CodeBucketName
+        AutoScalingMinSize: !Ref AutoScalingMinSize
+        AutoScalingMaxSize: !Ref AutoScalingMaxSize
 
-  NetworkModule:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: ./substacks/network.yml
-    DependsOn: ParamModule
+  # ServiceModule:
+  #   Type: AWS::CloudFormation::Stack
+  #   Properties:
+  #     TemplateURL: ./substacks/services.yml
+  #   DependsOn: ParamModule
 
-  ServerModule:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: ./substacks/servers.yml
-    DependsOn: NetworkModule
+  # NetworkModule:
+  #   Type: AWS::CloudFormation::Stack
+  #   Properties:
+  #     TemplateURL: ./substacks/network.yml
+  #   DependsOn: ParamModule
+
+  # ServerModule:
+  #   Type: AWS::CloudFormation::Stack
+  #   Properties:
+  #     TemplateURL: ./substacks/servers.yml
+  #   DependsOn: NetworkModule
   
   # DatabaseModule:
   #   Type: AWS::CloudFormation::Stack

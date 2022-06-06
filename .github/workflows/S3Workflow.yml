@@ -1,0 +1,26 @@
+name: Upload to S3
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Copy files to S3
+        shell: bash
+        env:
+          aws_key_id: ${{ secrets.ACCESS_KEY }}
+          aws_secret_access_key: ${{ secrets.SECRET_KEY }}
+          aws_s3_bucket: ${{ secrets.BUCKET_NAME }}
+        run: |
+          echo $aws_s3_bucket
+          sudo apt-get update && sudo apt-get -y install awscli
+          aws configure set aws_access_key_id $aws_key_id
+          aws configure set aws_secret_access_key $aws_secret_access_key 
+          aws configure set default.region us-west-2
+          aws s3 cp ./substacks/ s3://$aws_s3_bucket/substacks/ --recursive
+          aws s3 cp ./src/ s3://$aws_s3_bucket/src/ --recursive

@@ -15,11 +15,6 @@ Parameters:
     Type: 'AWS::SSM::Parameter::Value<String>'
     Default: '/TEST/EnvironmentName'
   
-  # InstanceSize:
-  #   Description: Size of EC2 instances being used
-  #   Type: 'AWS::SSM::Parameter::Value<String>'
-  #   Default: '/TEST/EC2/InstanceType'
-  
   VpcCIDR:
     Description: Address range for VPC CIDR
     Type: 'AWS::SSM::Parameter::Value<String>'
