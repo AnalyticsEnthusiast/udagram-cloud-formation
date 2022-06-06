@@ -75,7 +75,7 @@ Resources:
   ParamModule:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub ${CodeBucketName}/substacks/variables.yml
+      TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/variables.yml"
       Parameters:
         EnvironmentType: !Ref EnvironmentType
         EnvironmentName: !Ref EnvironmentName
@@ -97,25 +97,25 @@ Resources:
   # ServiceModule:
   #   Type: AWS::CloudFormation::Stack
   #   Properties:
-  #     TemplateURL: ./substacks/services.yml
+  #     TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/services.yml"
   #   DependsOn: ParamModule
 
   # NetworkModule:
   #   Type: AWS::CloudFormation::Stack
   #   Properties:
-  #     TemplateURL: ./substacks/network.yml
+  #     TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/network.yml"
   #   DependsOn: ParamModule
 
   # ServerModule:
   #   Type: AWS::CloudFormation::Stack
   #   Properties:
-  #     TemplateURL: ./substacks/servers.yml
+  #     TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/servers.yml"
   #   DependsOn: NetworkModule
   
   # DatabaseModule:
   #   Type: AWS::CloudFormation::Stack
   #     Properties:
-  #       TemplateURL: ./substacks/servers.yml
+  #       TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/servers.yml"
   #     DependsOn: ServerModule
 
   
