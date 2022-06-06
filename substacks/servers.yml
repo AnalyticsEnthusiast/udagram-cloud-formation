@@ -5,6 +5,7 @@ Description: >
   Desc: Template for creating EC2 launch configuration, Load balancer and Security Groups.
 
 Parameters:
+
   EnvironmentType:
     Description: Type of environment
     Type: 'AWS::SSM::Parameter::Value<String>'
@@ -115,7 +116,7 @@ Resources:
           cd /var/www/html
           echo "Udacity Demo Web Server Up and Running!" > index.html 
       ImageId: !Ref UbuntuAMI
-      KeyName: !Ref UdagramTestKey
+      KeyName: !Ref InstanceKeyPair
       SecurityGroups:
       - Ref: WebServerSecGroup
       InstanceType: !Ref InstanceType

@@ -6,6 +6,7 @@ Description: >
   duplicated parameters across templates and config drift. 
 
 Parameters:
+
   EnvironmentName:
     Description: Unique Identifier for project environment
     Type: String
