@@ -22,30 +22,46 @@ Parameters:
 
   InstanceType:
     Description: Size of EC2 instances being used
-    Type: String
+    Type: 'AWS::SSM::Parameter::Value<String>'
     Default: '/TEST/EC2/InstanceType'
 
   InstanceDefaultPort:
     Description: Default port being used for EC2 instances
-    Type: String
+    Type: 'AWS::SSM::Parameter::Value<String>'
     Default: '/TEST/EC2/InstanceDefaultPort'
   
   InstanceDeviceName:
     Description: Device path name
-    Type: String
+    Type: 'AWS::SSM::Parameter::Value<String>'
     Default: '/TEST/EC2/InstanceDeviceName'
   
   InstanceVolumeSize:
     Description: Instance Volume size
-    Type: String
+    Type: 'AWS::SSM::Parameter::Value<String>'
     Default: '/TEST/EC2/InstanceVolumeSize'
 
   InstanceKeyPair:
     Description: Instance key pair name
-    Type: String
+    Type: 'AWS::SSM::Parameter::Value<String>'
     Default: '/TEST/EC2/InstanceKeyPair'
 
+  AutoScalingMinSize:
+    Description: Min size for autoscaling
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: '/TEST/EC2/Autoscaling/AutoScalingMinSize'
+  
+  AutoScalingMaxSize:
+    Description: Max size for autoscaling
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: '/TEST/EC2/Autoscaling/AutoScalingMaxSize'
+
 Resources:
+
+  ProfileWithRolesForWebApp:
+    Type: AWS::IAM::InstanceProfile
+    Properties: 
+      Roles:
+        - UdagramS3ReadOnlyEC2
 
   LBSecGroup:
     Type: AWS::EC2::SecurityGroup
@@ -107,27 +123,29 @@ Resources:
       - DeviceName: !Ref InstanceDeviceName
         Ebs:
           VolumeSize: !Ref InstanceVolumeSize
-          
+
   WebAppGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       VPCZoneIdentifier:
       - Fn::ImportValue: 
-          !Sub "${EnvironmentName}-PRIV-NETS"
+          !Sub '${EnvironmentName}-${EnvironmentType}-PRIV-NETS'
       LaunchConfigurationName:
         Ref: WebAppLaunchConfig
-      MinSize: '3'
-      MaxSize: '5'
+      MinSize: !Ref AutoScalingMinSize
+      MaxSize: !Ref AutoScalingMaxSize
       TargetGroupARNs:
       - Ref: WebAppTargetGroup
+
   WebAppLB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Subnets:
-      - Fn::ImportValue: !Sub "${EnvironmentName}-PUB1-SN"
-      - Fn::ImportValue: !Sub "${EnvironmentName}-PUB2-SN"
+      - Fn::ImportValue: !Sub '${EnvironmentName}-${EnvironmentType}-PUB1-ID'
+      - Fn::ImportValue: !Sub '${EnvironmentName}-${EnvironmentType}-PUB2-ID'
       SecurityGroups:
       - Ref: LBSecGroup
+
   Listener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -139,6 +157,7 @@ Resources:
         Ref: WebAppLB
       Port: '80'
       Protocol: HTTP
+
   ALBListenerRule:
       Type: AWS::ElasticLoadBalancingV2::ListenerRule
       Properties:
@@ -150,6 +169,7 @@ Resources:
           Values: [/]
         ListenerArn: !Ref 'Listener'
         Priority: 1
+
   WebAppTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -158,9 +178,9 @@ Resources:
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 8
       HealthyThresholdCount: 2
-      Port: 8080
+      Port: 80
       Protocol: HTTP
       UnhealthyThresholdCount: 5
       VpcId: 
         Fn::ImportValue:
-          Fn::Sub: "${EnvironmentName}-VPCID"
+          Fn::Sub: '${EnvironmentName}-${EnvironmentType}-VPCID'

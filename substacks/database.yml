@@ -1,0 +1,6 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Name: Darren Foley
+  Email: darrenfoley015:@gmail.com
+  Desc: Template for creating backend database Instances. Out of scope for initial stage of the
+  project. Will be required for full production deployment.

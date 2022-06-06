@@ -4,7 +4,7 @@
 		"ParameterValue": "UdagramWebApplication"
 	},
   {
-    "ParameterKey": "Region",
+    "ParameterKey": "EnvironmentRegion",
 		"ParameterValue": "us-west-2"
   },
 	{
@@ -54,5 +54,13 @@
   {
     "ParameterKey": "CodeBucketName",
 		"ParameterValue": "udagram-code-bucket-df001"
+  },
+  {
+    "ParameterKey": "AutoScalingMinSize",
+		"ParameterValue": "2"
+  },
+  {
+    "ParameterKey": "AutoScalingMaxSize",
+		"ParameterValue": "4"
   }
 ]

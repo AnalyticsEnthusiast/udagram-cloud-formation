@@ -14,7 +14,7 @@ Parameters:
     Description: Type of environment
     Type: String
   
-  Region:
+  EnvironmentRegion:
     Description: Region used for deployment
     Type: String
   
@@ -57,7 +57,18 @@ Parameters:
   PrivateSubnet2CIDR:
     Description: Address range for Private CIDR 2
     Type: String
+  
+  CodeBucketName:
+    Description: Name of Code bucket were project code will be pushed
+    Type: String
+  
+  AutoScalingMinSize:
+    Description: Minimum Size for EC2 Autoscaling group
+    Type: String
 
+  AutoScalingMaxSize:
+    Description: Maximum size for EC2 Autoscaling group
+    Type: String
 
 Resources:
 
@@ -79,14 +90,14 @@ Resources:
       Type: String
       Value: !Ref EnvironmentName
   
-  Region:
+  EnvironmentRegionParam:
     Type: AWS::SSM::Parameter
     Properties: 
       Description: Default region for Web Application
       Name: /TEST/Region
       Tier: Standard
       Type: String
-      Value: !Ref Region
+      Value: !Ref EnvironmentRegion
 
   VpcCIDRParam:
     Type: AWS::SSM::Parameter
@@ -177,3 +188,30 @@ Resources:
       Tier: Standard
       Type: String
       Value: !Ref PrivateSubnet2CIDR
+  
+  CodeBucketNameParam:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: Name of Bucket which will hold Source code
+      Name: /TEST/CodeBucketName
+      Tier: Standard
+      Type: String
+      Value: !Ref CodeBucketName
+  
+  AutoScalingMinSizeParam:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: Min Size for Autoscaling group
+      Name: /TEST/EC2/Autoscaling/AutoScalingMinSize
+      Tier: Standard
+      Type: String
+      Value: !Ref AutoScalingMinSize
+  
+  AutoScalingMaxSizeParam:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: Max Size for Autoscaling group
+      Name: /TEST/EC2/Autoscaling/AutoScalingMaxSize
+      Tier: Standard
+      Type: String
+      Value: !Ref AutoScalingMaxSize

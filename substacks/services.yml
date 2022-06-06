@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Name: Darren Foley
+  Email: darrenfoley015@gmail.com
+  Desc: Template for creating services outside of VPC such as S3 buckets
+
+Parameters:
+
+  EnvironmentType:
+    Description: Type of environment
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: '/TEST'
+
+  EnvironmentName:
+    Description: Unique Identifier for project environment
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: '/TEST/EnvironmentName'
+  
+  Region:
+    Description: Region used for deployment
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: '/TEST/Region'
+  
+  CodeBucketName:
+    Description: Name of Code bucket were project code will be pushed
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: '/TEST/CodeBucketName'
+
+Resources:
+  SourceS3CodeBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref CodeBucketName
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls : true
+        BlockPublicPolicy : true
+        IgnorePublicAcls : true
+        RestrictPublicBuckets : true
+      Tags: 
+        - Key: EnvironmentName
+          Value: !Sub '${EnvironmentName}'
+        - Key: EnvironmentType
+          Value: !Sub '${EnvironmentType}'
