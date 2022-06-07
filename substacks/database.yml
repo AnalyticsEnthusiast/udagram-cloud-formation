@@ -6,6 +6,7 @@ Description: >
   project. Will be required for full production deployment.
 
 Parameters:
+
   EnvironmentType:
     Description: Type of environment
     Type: 'AWS::SSM::Parameter::Value<String>'
@@ -24,12 +25,7 @@ Parameters:
   DatabaseInstanceClass:
     Description: Instance class for database
     Type: String
-    Default: "db.t2.small"
-  
-  DefaultSG:
-    Description: Default security Group for RDS instance
-    Type: String
-    Default: ""
+    Default: 'db.t4g.small'
 
 Resources:
 
@@ -42,7 +38,7 @@ Resources:
           !Sub '${EnvironmentName}-${EnvironmentType}-VPCID'
       SecurityGroupIngress:
       - IpProtocol: tcp
-        FromPort: -1
+        FromPort: 0
         ToPort: 5432
         CidrIp: 10.0.0.0/16
       SecurityGroupEgress:
@@ -50,7 +46,6 @@ Resources:
         FromPort: 0
         ToPort: 65535
         CidrIp: 0.0.0.0/0
-
 
   # Creating a password for database instance using Secrets Manager
   DatabasePassword:
@@ -65,35 +60,35 @@ Resources:
         ExcludeCharacters: '"@/\'
 
   myDBSubnetGroup1:
-      Type: "AWS::RDS::DBSubnetGroup"
-      Properties: 
-        DBSubnetGroupDescription: "Subnets to use for the DB"
-        DBSubnetGroupName: "Subnet Group"
-        SubnetIds:
-          - !ImportValue 
-            'Fn::Sub': '${EnvironmentName}-${EnvironmentType}-PRIV1-ID'
-          - !ImportValue 
-            'Fn::Sub': '${EnvironmentName}-${EnvironmentType}-PRIV2-ID'
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties: 
+      DBSubnetGroupDescription: "Subnets to use for the DB"
+      DBSubnetGroupName: "Subnet Group"
+      SubnetIds:
+        - !ImportValue 
+          'Fn::Sub': '${EnvironmentName}-${EnvironmentType}-PRIV1-ID'
+        - !ImportValue 
+          'Fn::Sub': '${EnvironmentName}-${EnvironmentType}-PRIV2-ID'
     
-    MyDB: 
-      Type: "AWS::RDS::DBInstance"
-      Properties: 
-        VPCSecurityGroups: !Ref DBSecGroup
-        PubliclyAccessible: false
-        MultiAZ: false
-        AllocatedStorage: 20
-        DBInstanceClass: !Ref DatabaseInstanceClass
-        Engine: "postgres"
-        MasterUsername: !Sub '{{resolve:secretsmanager:${DatabasePassword}::username}}'
-        MasterUserPassword: !Sub '{{resolve:secretsmanager:${DatabasePassword}::password}}'
-        DBSubnetGroupName: !Ref myDBSubnetGroup1
-        Tags: 
-          - 
-            Key: "Name"
-            Value: !Sub "${EnvironmentName}-${EnvironmentType}-POSTGRES"
-      DeletionPolicy: "Delete" # Use Retain in a real world scenario
-    
-    SecretRDSInstanceAttachment:
+  MyDB: 
+    Type: "AWS::RDS::DBInstance"
+    Properties: 
+      VPCSecurityGroups: 
+        - !Sub "${DBSecGroup}"
+      PubliclyAccessible: false
+      MultiAZ: false
+      AllocatedStorage: 20
+      DBInstanceClass: !Ref DatabaseInstanceClass
+      Engine: "postgres"
+      MasterUsername: !Sub '{{resolve:secretsmanager:${DatabasePassword}::username}}'
+      MasterUserPassword: !Sub '{{resolve:secretsmanager:${DatabasePassword}::password}}'
+      DBSubnetGroupName: !Ref myDBSubnetGroup1
+      Tags: 
+        - Key: "Name"
+          Value: !Sub "${EnvironmentName}-${EnvironmentType}-POSTGRES"
+    DeletionPolicy: "Delete" # Use "Retain" in a real world scenario
+  
+  SecretRDSInstanceAttachment:
     Type: 'AWS::SecretsManager::SecretTargetAttachment'
     Properties:
       SecretId: !Ref DatabasePassword

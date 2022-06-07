@@ -201,6 +201,6 @@ Resources:
 Outputs:
   LoadBalancerURL:
     Description: Export of Load Balancer URL
-    Value: Fn::Join: ["", [ "http://", !GetAtt [ WebAppLB , DNSName] ] ]
+    Value: !Join [ "", [ "http://", Fn::GetAtt: [ WebAppLB , DNSName ] ] ]
     Export:
       Name: !Sub "${EnvironmentName}-${EnvironmentType}-DNSName"

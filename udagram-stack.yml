@@ -131,6 +131,11 @@ Resources:
   #       TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/database.yml"
   #     DependsOn: NetworkModule
 
-  
+  # Optional
+  # MonitoringModule:
+  #   Type: AWS::CloudFormation::Stack
+  #     Properties:
+  #       TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/monitoring.yml"
+  #     DependsOn: ServerModule
 
     

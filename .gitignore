@@ -1,2 +1,3 @@
 *.pem
 parent.yml
+substacks/monitoring.yml
