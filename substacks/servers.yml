@@ -56,13 +56,23 @@ Parameters:
     Type: 'AWS::SSM::Parameter::Value<String>'
     Default: '/TEST/EC2/Autoscaling/AutoScalingMaxSize'
 
+  CodeBucketName:
+    Description: Name of Code bucket were project code will be pushed
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: '/TEST/CodeBucketName'
+
+  UdagramS3Role:
+    Description: Role used for interacting with S3
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: '/TEST/EC2/InstanceProfile/UdagramS3Role'
+
 Resources:
 
   ProfileWithRolesForWebApp:
     Type: AWS::IAM::InstanceProfile
     Properties: 
       Roles:
-        - UdagramS3ReadOnlyEC2
+        - !Ref UdagramS3Role
 
   LBSecGroup:
     Type: AWS::EC2::SecurityGroup
@@ -111,12 +121,13 @@ Resources:
         Fn::Base64: !Sub |
           #!/bin/bash
           apt-get update -y
+          apt-get install awscli -y
           apt-get install apache2 -y
           systemctl start apache2.service
-          cd /var/www/html
-          echo "Udacity Demo Web Server Up and Running!" > index.html 
+          aws s3 cp s3://${CodeBucketName}/src/index.html /var/www/html/ 
       ImageId: !Ref UbuntuAMI
       KeyName: !Ref InstanceKeyPair
+      IamInstanceProfile: !Ref UdagramS3Role
       SecurityGroups:
       - Ref: WebServerSecGroup
       InstanceType: !Ref InstanceType

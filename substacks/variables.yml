@@ -63,6 +63,10 @@ Parameters:
     Description: Name of Code bucket were project code will be pushed
     Type: String
   
+  UdagramS3Role:
+    Description: Role used for interacting with S3
+    Type: String
+
   AutoScalingMinSize:
     Description: Minimum Size for EC2 Autoscaling group
     Type: String
@@ -198,6 +202,15 @@ Resources:
       Tier: Standard
       Type: String
       Value: !Ref CodeBucketName
+  
+  UdagramS3RoleParam:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: Role given to EC2 instances for pulling data from S3
+      Name: /TEST/EC2/InstanceProfile/UdagramS3Role
+      Tier: Standard
+      Type: String
+      Value: !Ref UdagramS3Role
   
   AutoScalingMinSizeParam:
     Type: AWS::SSM::Parameter

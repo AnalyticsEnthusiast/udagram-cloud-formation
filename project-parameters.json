@@ -62,5 +62,9 @@
   {
     "ParameterKey": "AutoScalingMaxSize",
 		"ParameterValue": "6"
+  },
+  {
+    "ParameterKey": "UdagramS3Role",
+		"ParameterValue": "UdagramS3ReadOnlyEC2"
   }
 ]

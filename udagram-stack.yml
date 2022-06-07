@@ -70,6 +70,10 @@ Parameters:
     Description: Maximum size for EC2 Autoscaling group
     Type: String
 
+  UdagramS3Role:
+    Description: Role used for interacting with S3
+    Type: String
+
 Resources:
 
   ParamModule:
@@ -93,6 +97,7 @@ Resources:
         CodeBucketName: !Ref CodeBucketName
         AutoScalingMinSize: !Ref AutoScalingMinSize
         AutoScalingMaxSize: !Ref AutoScalingMaxSize
+        UdagramS3Role: !Ref UdagramS3Role
 
   # ServiceModule:
   #   Type: AWS::CloudFormation::Stack
@@ -100,11 +105,11 @@ Resources:
   #     TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/services.yml"
   #   DependsOn: ParamModule
 
-  # NetworkModule:
-  #   Type: AWS::CloudFormation::Stack
-  #   Properties:
-  #     TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/network.yml"
-  #   DependsOn: ParamModule
+  NetworkModule:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/network.yml"
+    DependsOn: ParamModule
 
   # ServerModule:
   #   Type: AWS::CloudFormation::Stack
