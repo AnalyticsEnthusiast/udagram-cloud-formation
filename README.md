@@ -18,7 +18,9 @@ The Udagram web application will be deployed using a Launch configuration consis
 
 Requirements indicate that two vCPUs and at least 4GB of RAM is required. Therefore a "t2.medium" EC2 instance will be selected.
 
-The Operating system will be Ubuntu 18.04 LTS. The AMI will be obtained as a SSM public parameter (/aws/service/canonical/ubuntu/server/18.04/stable/current/amd64/hvm/ebs-gp2/ami-id).
+The Operating system will be Ubuntu 18.04 LTS. The AMI will be obtained as a SSM public parameter (/aws/service/canonical/ubuntu/server/18.04/stable/current/amd64/hvm/ebs-gp2/ami-id). 
+
+All project parameters will be stored in SSM to ensure no values are hardcoded the yml configuration.
 
 Minimum of 10GB disk on each instance.
 
@@ -77,5 +79,25 @@ Or you can uncomment the services.yml file in the parent stack "udagram-stack.ym
 
 The Parent stack also expects substacks to be uploaded to S3 here "s3://${bucket_name}/substacks/". So make sure this has been configured manually or through github actions.
 
+
+### Run the project
+
+You can run each substack individually like so:
+
+```
+> aws cloudformation create-stack --stack-name paramStack --template-body file://substacks/variables.yml --parameters file://project-parameters.json --profile UdacityAdmin
+```
+
+Or you can run the parent stack:
+
+```
+> aws cloudformation create-stack --stack-name UdagramStack --template-body file://udagram-stack.yml --parameters file://project-parameters.json --profile UdacityAdmin
+```
+
+Once the SSM parameters have been created from variables.yml, you don't need to pass the project-parameters.json file
+
+```
+> aws cloudformation create-stack --stack-name networkStack --template-body file://substacks/network.yml --profile UdacityAdmin
+```
 
 
