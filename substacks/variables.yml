@@ -75,6 +75,10 @@ Parameters:
     Description: Maximum size for EC2 Autoscaling group
     Type: String
 
+  DatabaseUsername:
+    Description: Username for database instance
+    Type: String
+
 Resources:
 
   EnvironmentTypeParam:
@@ -229,3 +233,12 @@ Resources:
       Tier: Standard
       Type: String
       Value: !Ref AutoScalingMaxSize
+  
+  DatabaseUsernameParam:
+    Type: AWS::SSM::Parameter
+    Properties: 
+      Description: User for udagram database instance
+      Name: /TEST/Database/Username
+      Tier: Standard
+      Type: String
+      Value: !Ref DatabaseUsername

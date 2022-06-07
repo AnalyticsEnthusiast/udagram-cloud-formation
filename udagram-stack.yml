@@ -73,6 +73,11 @@ Parameters:
   UdagramS3Role:
     Description: Role used for interacting with S3
     Type: String
+  
+  DatabaseUsername:
+    Description: Username for database instance
+    Type: String
+
 
 Resources:
 
@@ -98,7 +103,9 @@ Resources:
         AutoScalingMinSize: !Ref AutoScalingMinSize
         AutoScalingMaxSize: !Ref AutoScalingMaxSize
         UdagramS3Role: !Ref UdagramS3Role
+        DatabaseUsername: !Ref DatabaseUsername
 
+  # Optional if you want to create the bucket resource through Cloud formation
   # ServiceModule:
   #   Type: AWS::CloudFormation::Stack
   #   Properties:
@@ -111,17 +118,18 @@ Resources:
       TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/network.yml"
     DependsOn: ParamModule
 
-  # ServerModule:
-  #   Type: AWS::CloudFormation::Stack
-  #   Properties:
-  #     TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/servers.yml"
-  #   DependsOn: NetworkModule
+  ServerModule:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/servers.yml"
+    DependsOn: NetworkModule
   
+  # Optional
   # DatabaseModule:
   #   Type: AWS::CloudFormation::Stack
   #     Properties:
-  #       TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/servers.yml"
-  #     DependsOn: ServerModule
+  #       TemplateURL: !Sub "https://${CodeBucketName}.s3.us-west-2.amazonaws.com/substacks/database.yml"
+  #     DependsOn: NetworkModule
 
   
 

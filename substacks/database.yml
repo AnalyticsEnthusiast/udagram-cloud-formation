@@ -4,3 +4,98 @@ Description: >
   Email: darrenfoley015:@gmail.com
   Desc: Template for creating backend database Instances. Out of scope for initial stage of the
   project. Will be required for full production deployment.
+
+Parameters:
+  EnvironmentType:
+    Description: Type of environment
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: '/TEST'
+
+  EnvironmentName:
+    Description: Unique Identifier for project environment
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: '/TEST/EnvironmentName'
+  
+  DatabaseUsername:
+    Description: Name of Database User for backend
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: '/TEST/Database/Username'
+
+  DatabaseInstanceClass:
+    Description: Instance class for database
+    Type: String
+    Default: "db.t2.small"
+  
+  DefaultSG:
+    Description: Default security Group for RDS instance
+    Type: String
+    Default: ""
+
+Resources:
+
+  DBSecGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow calls to reach postgres Database on default port 5432
+      VpcId:
+        Fn::ImportValue:
+          !Sub '${EnvironmentName}-${EnvironmentType}-VPCID'
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: -1
+        ToPort: 5432
+        CidrIp: 10.0.0.0/16
+      SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: 0
+        ToPort: 65535
+        CidrIp: 0.0.0.0/0
+
+
+  # Creating a password for database instance using Secrets Manager
+  DatabasePassword:
+    Type: AWS::SecretsManager::Secret
+    Properties: 
+      Name: UdagramPasswordTest
+      Description: Password for Postgres Test Database Instance
+      GenerateSecretString: 
+        SecretStringTemplate: !Sub '{"username": "${DatabaseUsername}"}'
+        GenerateStringKey: "password"
+        PasswordLength: 30
+        ExcludeCharacters: '"@/\'
+
+  myDBSubnetGroup1:
+      Type: "AWS::RDS::DBSubnetGroup"
+      Properties: 
+        DBSubnetGroupDescription: "Subnets to use for the DB"
+        DBSubnetGroupName: "Subnet Group"
+        SubnetIds:
+          - !ImportValue 
+            'Fn::Sub': '${EnvironmentName}-${EnvironmentType}-PRIV1-ID'
+          - !ImportValue 
+            'Fn::Sub': '${EnvironmentName}-${EnvironmentType}-PRIV2-ID'
+    
+    MyDB: 
+      Type: "AWS::RDS::DBInstance"
+      Properties: 
+        VPCSecurityGroups: !Ref DBSecGroup
+        PubliclyAccessible: false
+        MultiAZ: false
+        AllocatedStorage: 20
+        DBInstanceClass: !Ref DatabaseInstanceClass
+        Engine: "postgres"
+        MasterUsername: !Sub '{{resolve:secretsmanager:${DatabasePassword}::username}}'
+        MasterUserPassword: !Sub '{{resolve:secretsmanager:${DatabasePassword}::password}}'
+        DBSubnetGroupName: !Ref myDBSubnetGroup1
+        Tags: 
+          - 
+            Key: "Name"
+            Value: !Sub "${EnvironmentName}-${EnvironmentType}-POSTGRES"
+      DeletionPolicy: "Delete" # Use Retain in a real world scenario
+    
+    SecretRDSInstanceAttachment:
+    Type: 'AWS::SecretsManager::SecretTargetAttachment'
+    Properties:
+      SecretId: !Ref DatabasePassword
+      TargetId: !Ref MyDB
+      TargetType: 'AWS::RDS::DBInstance'
