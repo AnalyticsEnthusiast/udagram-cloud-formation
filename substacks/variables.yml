@@ -34,10 +34,6 @@ Parameters:
   InstanceVolumeSize:
     Description: Instance Volume size
     Type: String
-
-  InstanceKeyPair:
-    Description: Instance key pair name
-    Type: String
   
   VpcCIDR:
     Description: Address range for VPC CIDR
@@ -152,15 +148,6 @@ Resources:
       Tier: Standard
       Type: String
       Value: !Ref InstanceVolumeSize
-
-  InstanceKeyPairParam:
-    Type: AWS::SSM::Parameter
-    Properties: 
-      Description: Size of attached volume for EC2 instances
-      Name: /TEST/EC2/InstanceKeyPair
-      Tier: Standard
-      Type: String
-      Value: !Ref InstanceKeyPair
   
   PublicSubnet1Param:
     Type: AWS::SSM::Parameter

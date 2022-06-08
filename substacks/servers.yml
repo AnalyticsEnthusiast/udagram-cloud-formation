@@ -41,11 +41,6 @@ Parameters:
     Type: 'AWS::SSM::Parameter::Value<String>'
     Default: '/TEST/EC2/InstanceVolumeSize'
 
-  InstanceKeyPair:
-    Description: Instance key pair name
-    Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: '/TEST/EC2/InstanceKeyPair'
-
   AutoScalingMinSize:
     Description: Min size for autoscaling
     Type: 'AWS::SSM::Parameter::Value<String>'
@@ -126,7 +121,6 @@ Resources:
           systemctl start apache2.service
           aws s3 cp s3://${CodeBucketName}/src/index.html /var/www/html/ 
       ImageId: !Ref UbuntuAMI
-      KeyName: !Ref InstanceKeyPair
       IamInstanceProfile: !Ref UdagramS3Role
       SecurityGroups:
       - Ref: WebServerSecGroup

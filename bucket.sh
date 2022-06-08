@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # PARAMS
-BUCKET_NAME="udagram-code-bucket-df001"
+BUCKET_NAME="udagram-code-bucket-df002"
 PROFILE_NAME="UdacityAdmin"
 REGION="us-west-2"
 

@@ -34,10 +34,6 @@ Parameters:
     Description: Instance Volume size
     Type: String
 
-  InstanceKeyPair:
-    Description: Instance key pair name
-    Type: String
-
   VpcCIDR:
     Description: Address range for VPC CIDR
     Type: String
@@ -93,7 +89,6 @@ Resources:
         InstanceDefaultPort: !Ref InstanceDefaultPort
         InstanceDeviceName: !Ref InstanceDeviceName
         InstanceVolumeSize: !Ref InstanceVolumeSize
-        InstanceKeyPair: !Ref InstanceKeyPair
         VpcCIDR: !Ref VpcCIDR
         PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
         PublicSubnet2CIDR: !Ref PublicSubnet2CIDR

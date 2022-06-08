@@ -28,10 +28,6 @@
     "ParameterValue": "10"
   },
   {
-    "ParameterKey": "InstanceKeyPair",
-    "ParameterValue": "UdagramTestKey"
-  },
-  {
     "ParameterKey": "VpcCIDR",
 		"ParameterValue": "10.0.0.0/16"
   },
@@ -53,7 +49,7 @@
   },
   {
     "ParameterKey": "CodeBucketName",
-		"ParameterValue": "udagram-code-bucket-df001"
+		"ParameterValue": "udagram-code-bucket-df002"
   },
   {
     "ParameterKey": "AutoScalingMinSize",
